@@ -22,7 +22,7 @@ microk8s status --wait-ready
 
 ```bash
 
- microk8s enable dashboard dns registry istio 
+microk8s enable dashboard dns registry istio 
 
 ```
 
@@ -30,7 +30,7 @@ microk8s status --wait-ready
 
 ```bash
 
- microk8s kubectl get all --all-namespaces 
+microk8s kubectl get all --all-namespaces 
 
 ```
 
@@ -47,5 +47,36 @@ microk8s dashboard-proxy
 ```bash
 
 microk8s start/stop
+
+```
+
+# Install tools
+
+[`https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/`]
+
+### Install kubectl binary with curl on Linux
+
+```bash
+
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+
+```
+
+#### Install using other package management 
+
+```bash
+
+snap install kubectl --classic
+kubectl version --client
+
+```
+
+# Verify kubectl configuration
+
+```bash
+
+kubectl cluster-info
 
 ```
