@@ -50,7 +50,7 @@ microk8s start/stop
 
 ```
 
-# Install tools
+# Install kubectl
 
 [`https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/`]
 
