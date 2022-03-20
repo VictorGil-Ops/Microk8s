@@ -1,8 +1,8 @@
-# micro8ks
+# MicroK8s common use
 
-https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s?&_ga=2.198964079.159365322.1647560184-1468234753.1647560184#1-overview
+`https://ubuntu.com/tutorials/install-a-local-kubernetes-with-microk8s?&_ga=2.198964079.159365322.1647560184-1468234753.1647560184#1-overview`
 
-#### Installation
+## Installation
 
 ```bash
 
@@ -10,7 +10,7 @@ sudo snap install microk8s --classic
 
 ```
 
-#### Check the status while Kubernetes starts 
+### Check the status while Kubernetes starts
 
 ```bash
 
@@ -18,9 +18,9 @@ microk8s status --wait-ready
 
 ```
 
-#### Turn on the services you want
+### Turn on the services you want
 
-> microk8s enable --help for a list of available services and optional features. 
+> microk8s enable --help for a list of available services and optional features.
 
 ```bash
 
@@ -28,7 +28,7 @@ microk8s enable dashboard dns registry istio
 
 ```
 
-####  Start using Kubernetes 
+### Start using Kubernetes
 
 ```bash
 
@@ -36,7 +36,7 @@ microk8s kubectl get all --all-namespaces
 
 ```
 
-####  Access the Kubernetes dashboard 
+### Access the Kubernetes dashboard
 
 ```bash
 
@@ -44,7 +44,7 @@ microk8s dashboard-proxy
 
 ```
 
-#### Start and stop Kubernetes
+### Start and stop Kubernetes
 
 ```bash
 
@@ -52,7 +52,7 @@ microk8s start/stop
 
 ```
 
-# Install kubectl
+## Install kubectl
 
 [`https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/`]
 
@@ -66,7 +66,7 @@ kubectl version --client
 
 ```
 
-#### Install using other package management 
+### Install using other package management
 
 ```bash
 
@@ -75,10 +75,18 @@ kubectl version --client
 
 ```
 
-# Verify kubectl configuration
+### Verify kubectl configuration
 
 ```bash
 
 kubectl cluster-info
+
+```
+
+### Change user and context
+
+```bash
+
+kubectl config set-context microk8s --user=admin --namespace=default
 
 ```
