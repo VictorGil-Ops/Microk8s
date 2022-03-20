@@ -113,17 +113,30 @@ generate_kubeconfig() {
 }
 
 generate_cluster_role() {
-    cat > $workdir/kube/role.yaml <<ROLEDEF
+    cat > $workdir/kube/clusterrole.yaml <<ROLEDEF
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   namespace: $cluster_ns
-  name: CloudOps
+  name: CloudOps_role
 rules:
 - apiGroups: ['rbac.authorization.k8s.io'] # '' indicates the core API group
   resources: ['pods', 'configmaps', 'services', 'endpoints', 'crontabs', 'deployments', 'jobs', 'nodes']
   verbs: ["get", "post", "list", "watch", "create", "update", "patch", "delete"]
 ROLEDEF
+
+generate_cluster_role() {
+    cat > $workdir/kube/clusterrole.yaml <<CLUSTERROLEDEF
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  namespace: $cluster_ns
+  name: CloudOps_clusterrole
+rules:
+- apiGroups: ['rbac.authorization.k8s.io'] # '' indicates the core API group
+  resources: ['pods', 'configmaps', 'services', 'endpoints', 'crontabs', 'deployments', 'jobs', 'nodes']
+  verbs: ["get", "post", "list", "watch", "create", "update", "patch", "delete"]
+CLUSTERROLEDEF
 
 log "... created CloupsOps \"All\" (CloudOps) role manifest for user \"$user\" at $workdir/kube/ "
 }
