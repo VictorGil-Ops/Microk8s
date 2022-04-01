@@ -49,8 +49,9 @@ log () {
 }
 
 setup_environment() {
-    workdir=$(mktemp -d --suffix -microk8s)
-    
+    #workdir=$(mktemp -d --suffix -microk8s)
+    workdir="/home/victor/.kube"
+
     mkdir -p $workdir/{ca,keys,kube} 
     log "... created $workdir/{ca,keys,kube} subfolders"
 
@@ -77,7 +78,7 @@ setup_environment() {
 
 copy_ca_certs() {
     msg="Copying MicroK8s certs to $workdir/ca\n"
-    cp /var/snap/microk8s/current/certs/* $workdir/ca
+    cp -a /var/snap/microk8s/current/certs/* $workdir/ca/
     if [ $? -eq 0 ]; then log "${msg}"; else log "${msg}" FAIL; exit 1;  fi
 }
 
@@ -115,25 +116,12 @@ generate_kubeconfig() {
 }
 
 generate_cluster_role() {
-    cat > $workdir/kube/clusterrole.yaml <<ROLEDEF
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  namespace: $cluster_ns
-  name: CloudOps_role
-rules:
-- apiGroups: ['rbac.authorization.k8s.io'] # '' indicates the core API group
-  resources: ['pods', 'configmaps', 'services', 'endpoints', 'crontabs', 'deployments', 'jobs', 'nodes']
-  verbs: ["get", "post", "list", "watch", "create", "update", "patch", "delete"]
-ROLEDEF
-
-generate_cluster_role() {
     cat > $workdir/kube/clusterrole.yaml <<CLUSTERROLEDEF
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   namespace: $cluster_ns
-  name: CloudOps_clusterrole
+  name: CloudOps-cluster-role
 rules:
 - apiGroups: ['rbac.authorization.k8s.io'] # '' indicates the core API group
   resources: ['pods', 'configmaps', 'services', 'endpoints', 'crontabs', 'deployments', 'jobs', 'nodes']
@@ -143,20 +131,20 @@ CLUSTERROLEDEF
 log "... created CloupsOps \"All\" (CloudOps) role manifest for user \"$user\" at $workdir/kube/ "
 }
 
-generate_rolebinding() {
-    cat > $workdir/kube/rolebinding.yaml <<ROLEBINDINGDEF
+generate_cluster_rolebinding() {
+    cat > $workdir/kube/clusterrolebinding.yaml <<ROLEBINDINGDEF
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
   namespace: $cluster_ns
-  name: bind-CloudOps-role
+  name: bind-CloudOps-cluster-role
 subjects:
 - kind: User
   name: $user
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
-  name: CloudOps
+  name: CloudOps-cluster-role
   apiGroup: rbac.authorization.k8s.io
 ROLEBINDINGDEF
 
@@ -215,8 +203,8 @@ bind_cluster_role_to_user() {
     __check_kubeconfig "$custom_kubeconfig"
     __check_current_context "$KUBECONFIG_FILE"
 
-    kubectl_apply_role="kubectl apply -f $workdir/kube/role.yaml $KUBECONFIG_FILE"
-    kubectl_apply_rolebinding="kubectl apply -f $workdir/kube/rolebinding.yaml $KUBECONFIG_FILE"
+    kubectl_apply_role="kubectl apply -f $workdir/kube/clusterrole.yaml $KUBECONFIG_FILE"
+    kubectl_apply_rolebinding="kubectl apply -f $workdir/kube/clusterrolebinding.yaml $KUBECONFIG_FILE"
 
     __kubectl_apply "$kubectl_apply_role"
     __kubectl_apply "$kubectl_apply_rolebinding"
@@ -229,7 +217,7 @@ bind_cluster_role_to_user() {
 echo "------------------------------------------------------------------------------"
 log "Setting variables and temp dir ..."
 # setup_environment  USERNAME NAMESPACE DAYSTOEXPIRE CONTEXT
-setup_environment    "victor"   "default" 300           "microk8s"
+setup_environment "victor" "default" 300 "microk8s"
 copy_ca_certs
 
 # Authentication
@@ -245,7 +233,7 @@ echo "--------------------------------------------------------------------------
 log "Generating Role manifest ..."
 generate_cluster_role
 log "Generating RoleBinding manifest ..."
-generate_rolebinding
+generate_cluster_rolebinding
 
 echo "------------------------------------------------------------------------------"
 # bind_sample_role_to_user KUBECONFIG file [OPTIONAL]  
