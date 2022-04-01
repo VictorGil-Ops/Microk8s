@@ -1,5 +1,7 @@
 ﻿#!/usr/bin/env bash
 
+# NO FUNCIONA CORRECTAMENTE
+
 # Ref: https://github.com/k3s-io/k3s/issues/684
 # Ref: https://stackoverflow.com/questions/5947742/how-to-change-the-output-color-of-echo-in-linux
 # Ref: https://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
