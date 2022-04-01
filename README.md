@@ -90,3 +90,17 @@ kubectl cluster-info
 kubectl config set-context microk8s --user=admin --namespace=default
 
 ```
+
+## Create cert for user
+
+```bash
+
+openssl genrsa -out victor.key 2048 
+
+openssl req -new -key victor.key -out victor.csr -subj "/CN=victor/O=office"
+
+CA_LOCATION=/var/snap/microk8s/current/certs/
+
+openssl x509 -req -in victor.csr -CA $CA_LOCATION/ca.crt -CAkey $CA_LOCATION/ca.key -CAcreateserial -out victor.crt -days 500
+
+```
