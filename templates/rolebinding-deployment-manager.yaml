@@ -1,0 +1,16 @@
+#kubectl create -f role-deployment-manager.yaml
+
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: deployment-manager-binding
+  namespace: office
+subjects:
+- kind: User
+  name: Victor
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: deployment-manager
+  apiGroup: ""
+
