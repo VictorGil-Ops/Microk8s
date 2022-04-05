@@ -93,6 +93,10 @@ kubectl config set-context microk8s --user=admin --namespace=default
 
 ## Create cert for user
 
+<https://kubernetes.io/docs/reference/access-authn-authz/authentication/>
+
+
+
 ```bash
 
 openssl genrsa -out victor.key 2048 
